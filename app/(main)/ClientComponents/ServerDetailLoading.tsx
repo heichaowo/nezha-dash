@@ -1,6 +1,5 @@
 import { BackIcon } from "@/components/Icon";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
 export function ServerDetailChartLoading() {
@@ -20,13 +19,12 @@ export function ServerDetailChartLoading() {
 
 export function ServerDetailLoading() {
   const router = useRouter();
-  const locale = useLocale();
 
   return (
     <>
       <div
         onClick={() => {
-          router.push(`/${locale}/`);
+          router.push(`/`);
         }}
         className="flex flex-none cursor-pointer font-semibold leading-none items-center break-all tracking-tight gap-0.5 text-xl"
       >

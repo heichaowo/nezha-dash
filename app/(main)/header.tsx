@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import getEnv from "@/lib/env-entry";
 import { DateTime } from "luxon";
 import { useTranslations } from "next-intl";
-import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
@@ -19,14 +18,14 @@ function Header() {
   const customDescription = getEnv("NEXT_PUBLIC_CustomDescription");
 
   const router = useRouter();
-  const locale = useLocale();
 
   return (
     <div className="mx-auto w-full max-w-5xl">
       <section className="flex items-center justify-between">
         <section
           onClick={() => {
-            router.push(`/${locale}/`);
+            sessionStorage.removeItem("selectedTag");
+            router.push(`/`);
           }}
           className="flex cursor-pointer items-center text-base font-medium"
         >
@@ -62,8 +61,8 @@ function Header() {
 }
 
 // https://github.com/streamich/react-use/blob/master/src/useInterval.ts
-const useInterval = (callback: Function, delay?: number | null) => {
-  const savedCallback = useRef<Function>(() => { });
+const useInterval = (callback: () => void, delay: number | null) => {
+  const savedCallback = useRef<() => void>(() => {});
   useEffect(() => {
     savedCallback.current = callback;
   });
@@ -98,7 +97,9 @@ function Overview() {
         </p>
         {mouted ? (
           <p className="opacity-1 text-sm font-medium">{timeString}</p>
-        ) : <Skeleton className="h-[20px] w-[50px] rounded-[5px] bg-muted-foreground/10 animate-none"></Skeleton>}
+        ) : (
+          <Skeleton className="h-[20px] w-[50px] rounded-[5px] bg-muted-foreground/10 animate-none"></Skeleton>
+        )}
       </div>
     </section>
   );

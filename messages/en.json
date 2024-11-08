@@ -12,6 +12,7 @@
     "defaultTag": "All"
   },
   "ServerCard": {
+    "System": "System",
     "CPU": "CPU",
     "Mem": "Mem",
     "STG": "STG",
@@ -22,6 +23,12 @@
   "TabSwitch": {
     "Detail": "Detail",
     "Network": "Network"
+  },
+  "SignIn": {
+    "SignInMessage": "Please enter the password",
+    "Submit": "Login",
+    "ErrorMessage": "Invalid password",
+    "SuccessMessage": "Login successful"
   },
   "ServerCardPopover": {
     "System": "System",
@@ -52,6 +59,7 @@
     "Arch": "Arch",
     "Mem": "Mem",
     "Disk": "Disk",
+    "Region": "Region",
     "System": "System",
     "CPU": "CPU"
   },

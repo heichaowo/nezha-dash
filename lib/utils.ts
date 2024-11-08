@@ -1,4 +1,4 @@
-import { NezhaAPISafe } from "@/app/[locale]/types/nezha-api";
+import { NezhaAPISafe } from "@/app/types/nezha-api";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -10,16 +10,16 @@ export function formatNezhaInfo(serverInfo: NezhaAPISafe) {
   return {
     ...serverInfo,
     cpu: serverInfo.status.CPU,
-    process: serverInfo.status.ProcessCount,
-    up: serverInfo.status.NetOutSpeed / 1024 / 1024,
-    down: serverInfo.status.NetInSpeed / 1024 / 1024,
+    process: serverInfo.status.ProcessCount || 0,
+    up: serverInfo.status.NetOutSpeed / 1024 / 1024 || 0,
+    down: serverInfo.status.NetInSpeed / 1024 / 1024 || 0,
     online: serverInfo.online_status,
-    tcp: serverInfo.status.TcpConnCount,
-    udp: serverInfo.status.UdpConnCount,
-    mem: (serverInfo.status.MemUsed / serverInfo.host.MemTotal) * 100,
-    swap: (serverInfo.status.SwapUsed / serverInfo.host.SwapTotal) * 100,
-    disk: (serverInfo.status.DiskUsed / serverInfo.host.DiskTotal) * 100,
-    stg: (serverInfo.status.DiskUsed / serverInfo.host.DiskTotal) * 100,
+    tcp: serverInfo.status.TcpConnCount || 0,
+    udp: serverInfo.status.UdpConnCount || 0,
+    mem: (serverInfo.status.MemUsed / serverInfo.host.MemTotal) * 100 || 0,
+    swap: (serverInfo.status.SwapUsed / serverInfo.host.SwapTotal) * 100 || 0,
+    disk: (serverInfo.status.DiskUsed / serverInfo.host.DiskTotal) * 100 || 0,
+    stg: (serverInfo.status.DiskUsed / serverInfo.host.DiskTotal) * 100 || 0,
     country_code: serverInfo.host.CountryCode,
   };
 }
@@ -71,19 +71,20 @@ export const fetcher = (url: string) =>
       throw err;
     });
 
-export const nezhaFetcher = (url: string) =>
-  fetch(url)
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(res.statusText);
-      }
-      return res.json();
-    })
-    .then((data) => data)
-    .catch((err) => {
-      console.error(err);
-      throw err;
-    });
+export const nezhaFetcher = async (url: string) => {
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    const error = new Error("An error occurred while fetching the data.");
+    // @ts-expect-error - res.json() returns a Promise<any>
+    error.info = await res.json();
+    // @ts-expect-error - res.status is a number
+    error.status = res.status;
+    throw error;
+  }
+
+  return res.json();
+};
 
 export function formatRelativeTime(timestamp: number): string {
   const now = Date.now();

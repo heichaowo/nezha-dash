@@ -1,6 +1,6 @@
 "use client";
 
-import { ServerApi } from "@/app/[locale]/types/nezha-api";
+import { ServerApi } from "@/app/types/nezha-api";
 import { Loader } from "@/components/loading/Loader";
 import { Card, CardContent } from "@/components/ui/card";
 import getEnv from "@/lib/env-entry";
@@ -18,13 +18,16 @@ export default function ServerOverviewClient() {
   );
   const disableCartoon = getEnv("NEXT_PUBLIC_DisableCartoon") === "true";
 
-  if (error)
+  if (error) {
     return (
       <div className="flex flex-col items-center justify-center">
-        <p className="text-sm font-medium opacity-40">{error.message}</p>
+        <p className="text-sm font-medium opacity-40">
+          Error status:{error.status} {error.info?.cause ?? error.message}
+        </p>
         <p className="text-sm font-medium opacity-40">{t("error_message")}</p>
       </div>
     );
+  }
 
   return (
     <>
@@ -107,11 +110,11 @@ export default function ServerOverviewClient() {
                 {t("p_3463-3530_Totalbandwidth")}
               </p>
               {data?.result ? (
-                <section className="flex pt-[4px] items-center gap-2">
-                  <p className="text-[14px]  font-semibold">
+                <section className="flex flex-col sm:flex-row pt-[8px] sm:items-center items-start gap-1">
+                  <p className="text-[12px]  text-nowrap font-semibold">
                     ↑{formatBytes(data?.total_out_bandwidth)}
                   </p>
-                  <p className="text-[14px]  font-semibold">
+                  <p className="text-[12px] text-nowrap font-semibold">
                     ↓{formatBytes(data?.total_in_bandwidth)}
                   </p>
                 </section>
