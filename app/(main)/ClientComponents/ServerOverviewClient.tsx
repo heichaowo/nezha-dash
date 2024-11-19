@@ -4,19 +4,26 @@ import { ServerApi } from "@/app/types/nezha-api";
 import { Loader } from "@/components/loading/Loader";
 import { Card, CardContent } from "@/components/ui/card";
 import getEnv from "@/lib/env-entry";
-import { formatBytes, nezhaFetcher } from "@/lib/utils";
+import { useStatus } from "@/lib/status-context";
+import { cn, formatBytes, nezhaFetcher } from "@/lib/utils";
 import blogMan from "@/public/blog-man.webp";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 
 export default function ServerOverviewClient() {
+  const { status, setStatus } = useStatus();
   const t = useTranslations("ServerOverviewClient");
   const { data, error, isLoading } = useSWR<ServerApi>(
     "/api/server",
     nezhaFetcher,
   );
   const disableCartoon = getEnv("NEXT_PUBLIC_DisableCartoon") === "true";
+
+  const searchParams = useSearchParams();
+
+  const global = searchParams.get("global");
 
   if (error) {
     return (
@@ -32,7 +39,10 @@ export default function ServerOverviewClient() {
   return (
     <>
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Card>
+        <Card
+          onClick={() => (global ? null : setStatus("all"))}
+          className="cursor-pointer hover:border-blue-500 transition-all"
+        >
           <CardContent className="px-6 py-3">
             <section className="flex flex-col gap-1">
               <p className="text-sm font-medium md:text-base">
@@ -55,7 +65,15 @@ export default function ServerOverviewClient() {
             </section>
           </CardContent>
         </Card>
-        <Card>
+        <Card
+          onClick={() => (global ? null : setStatus("online"))}
+          className={cn(
+            "cursor-pointer hover:ring-green-500 ring-1 ring-transparent transition-all",
+            {
+              "ring-green-500 ring-2 border-transparent": status === "online",
+            },
+          )}
+        >
           <CardContent className="px-6 py-3">
             <section className="flex flex-col gap-1">
               <p className="text-sm font-medium md:text-base">
@@ -79,7 +97,15 @@ export default function ServerOverviewClient() {
             </section>
           </CardContent>
         </Card>
-        <Card>
+        <Card
+          onClick={() => (global ? null : setStatus("offline"))}
+          className={cn(
+            "cursor-pointer hover:ring-red-500 ring-1 ring-transparent transition-all",
+            {
+              "ring-red-500 ring-2 border-transparent": status === "offline",
+            },
+          )}
+        >
           <CardContent className="px-6 py-3">
             <section className="flex flex-col gap-1">
               <p className="text-sm font-medium md:text-base">
