@@ -4,6 +4,7 @@ import { ServerApi } from "@/app/types/nezha-api";
 import ServerCard from "@/components/ServerCard";
 import Switch from "@/components/Switch";
 import getEnv from "@/lib/env-entry";
+import { useFilter } from "@/lib/network-filter-context";
 import { useStatus } from "@/lib/status-context";
 import { nezhaFetcher } from "@/lib/utils";
 import { GlobeAsiaAustraliaIcon } from "@heroicons/react/20/solid";
@@ -13,7 +14,8 @@ import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 
 export default function ServerListClient() {
-  const { status, setStatus } = useStatus();
+  const { status } = useStatus();
+  const { filter } = useFilter();
   const t = useTranslations("ServerListClient");
   const containerRef = useRef<HTMLDivElement>(null);
   const defaultTag = "defaultTag";
@@ -21,13 +23,11 @@ export default function ServerListClient() {
 
   const [tag, setTag] = useState<string>(defaultTag);
 
-  const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     const savedTag = sessionStorage.getItem("selectedTag") || defaultTag;
     setTag(savedTag);
 
     restoreScrollPosition();
-    setIsMounted(true);
   }, []);
 
   const handleTagChange = (newTag: string) => {
@@ -69,7 +69,7 @@ export default function ServerListClient() {
       </div>
     );
 
-  if (!data?.result || !isMounted) return null;
+  if (!data?.result) return null;
 
   const { result } = data;
   const sortedServers = result.sort((a, b) => {
@@ -96,6 +96,17 @@ export default function ServerListClient() {
       ? filteredServersByStatus
       : filteredServersByStatus.filter((server) => server.tag === tag);
 
+  if (filter) {
+    // 根据使用流量进行从高到低排序
+    filteredServers.sort((a, b) => {
+      return (
+        b.status.NetInTransfer +
+        b.status.NetOutTransfer -
+        (a.status.NetInTransfer + b.status.NetOutTransfer)
+      );
+    });
+  }
+
   const tagCountMap: Record<string, number> = {};
   filteredServersByStatus.forEach((server) => {
     if (server.tag) {
@@ -105,15 +116,14 @@ export default function ServerListClient() {
 
   return (
     <>
-      <section className="flex items-center gap-2">
+      <section className="flex items-center gap-2 w-full overflow-hidden">
         <button
           onClick={() => {
-            setStatus("all");
             router.push(`/?global=true`);
           }}
-          className="rounded-[50px] bg-stone-100 p-[10px] transition-all hover:bg-stone-200 dark:hover:bg-stone-700 dark:bg-stone-800"
+          className="rounded-[50px] text-white cursor-pointer [text-shadow:_0_1px_0_rgb(0_0_0_/_20%)] bg-blue-600 hover:bg-blue-500 p-[10px] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[inset_0_1px_0_rgba(0,0,0,0.2)] "
         >
-          <GlobeAsiaAustraliaIcon className="size-4" />
+          <GlobeAsiaAustraliaIcon className="size-[13px]" />
         </button>
         {getEnv("NEXT_PUBLIC_ShowTag") === "true" && (
           <Switch

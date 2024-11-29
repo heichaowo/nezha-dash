@@ -1,9 +1,11 @@
-<h1 align="center">NezhaDash</h1>
-
-<strong>NezhaDash 是一个基于 Next.js 和 哪吒监控 的仪表盘</strong>
+<div align="center"><img width="600" alt="nezhadash" src="https://github.com/user-attachments/assets/0a5768e1-96f2-4f8a-b77f-01488ed3b237"></div>
+<h3 align="center">NezhaDash 是一个基于 Next.js 和 哪吒监控 的仪表盘</h3>
 <br>
 
 </div>
+
+> [!CAUTION]
+> 与哪吒监控 V1 暂不兼容，请保持在 V0 版本。
 
 ### 部署
 
@@ -24,9 +26,11 @@
 
 [环境变量介绍](https://nezhadash-docs.vercel.app/environment)
 
-![screen](/.github/shot-1.png)
-![screen](/.github/shot-2.png)
-![screen](/.github/shot-3.png)
-![screen](/.github/shot-1-dark.png)
-![screen](/.github/shot-2-dark.png)
-![screen](/.github/shot-3-dark.png)
+![screen](/.github/1.webp)
+![screen](/.github/2.webp)
+![screen](/.github/3.webp)
+![screen](/.github/4.webp)
+![screen](/.github/1-dark.webp)
+![screen](/.github/2-dark.webp)
+![screen](/.github/3-dark.webp)
+![screen](/.github/4-dark.webp)

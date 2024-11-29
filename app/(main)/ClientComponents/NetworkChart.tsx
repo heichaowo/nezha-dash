@@ -128,7 +128,7 @@ export const NetworkChart = React.memo(function NetworkChart({
         <button
           key={key}
           data-active={activeChart === key}
-          className={`relative z-30 flex flex-1 flex-col justify-center gap-1 border-b px-6 py-4 text-left data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-6`}
+          className={`relative z-30 flex cursor-pointer flex-1 flex-col justify-center gap-1 border-b border-neutral-200 dark:border-neutral-800 px-6 py-4 text-left data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-6`}
           onClick={() => handleButtonClick(key)}
         >
           <span className="whitespace-nowrap text-xs text-muted-foreground">
@@ -182,7 +182,7 @@ export const NetworkChart = React.memo(function NetworkChart({
         </div>
         <div className="flex flex-wrap">{chartButtons}</div>
       </CardHeader>
-      <CardContent className="px-2 sm:p-6">
+      <CardContent className="pr-2 pl-0 py-4 sm:pt-6 sm:pb-6 sm:pr-6 sm:pl-2">
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
@@ -209,8 +209,7 @@ export const NetworkChart = React.memo(function NetworkChart({
             <YAxis
               tickLine={false}
               axisLine={false}
-              mirror={true}
-              tickMargin={-15}
+              tickMargin={15}
               minTickGap={20}
               tickFormatter={(value) => `${value}ms`}
             />

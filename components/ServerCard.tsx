@@ -12,7 +12,6 @@ import {
 import { cn, formatBytes, formatNezhaInfo } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function ServerCard({
   serverInfo,
@@ -20,7 +19,6 @@ export default function ServerCard({
   serverInfo: NezhaAPISafe;
 }) {
   const t = useTranslations("ServerCard");
-  const router = useRouter();
   const { id, name, country_code, online, cpu, up, down, mem, stg, host } =
     formatNezhaInfo(serverInfo);
 
@@ -34,10 +32,10 @@ export default function ServerCard({
   };
 
   return online ? (
-    <Link onClick={saveSession} href={`/${id}`} prefetch={true}>
+    <Link onClick={saveSession} href={`/server/${id}`} prefetch={true}>
       <Card
         className={cn(
-          "flex flex-col items-center justify-start gap-3 p-3 md:px-5 cursor-pointer",
+          "flex flex-col items-center justify-start gap-3 p-3 md:px-5 cursor-pointer hover:bg-accent/50 transition-colors",
           {
             "flex-col": fixedTopServerName,
             "lg:flex-row": !fixedTopServerName,
@@ -63,7 +61,7 @@ export default function ServerCard({
             <p
               className={cn(
                 "break-all font-bold tracking-tight",
-                showFlag ? "text-xs" : "text-sm",
+                showFlag ? "text-xs " : "text-sm",
               )}
             >
               {name}
@@ -138,12 +136,7 @@ export default function ServerCard({
             </div>
           </section>
           {showNetTransfer && (
-            <section
-              onClick={() => {
-                router.push(`/${id}`);
-              }}
-              className={"flex items-center justify-between gap-1"}
-            >
+            <section className={"flex items-center justify-between gap-1"}>
               <Badge
                 variant="secondary"
                 className="items-center flex-1 justify-center rounded-[8px] text-nowrap text-[11px] border-muted-50 shadow-md shadow-neutral-200/30 dark:shadow-none"
@@ -193,7 +186,7 @@ export default function ServerCard({
           <p
             className={cn(
               "break-all font-bold tracking-tight",
-              showFlag ? "text-xs max-w-[80px]" : "text-sm",
+              showFlag ? "text-xs" : "text-sm",
             )}
           >
             {name}
