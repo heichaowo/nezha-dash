@@ -2,16 +2,23 @@
 
 import { ServerApi } from "@/app/types/nezha-api";
 import ServerCard from "@/components/ServerCard";
+import ServerCardInline from "@/components/ServerCardInline";
 import Switch from "@/components/Switch";
 import getEnv from "@/lib/env-entry";
 import { useFilter } from "@/lib/network-filter-context";
 import { useStatus } from "@/lib/status-context";
-import { nezhaFetcher } from "@/lib/utils";
-import { GlobeAsiaAustraliaIcon } from "@heroicons/react/20/solid";
+import { cn, nezhaFetcher } from "@/lib/utils";
+import { MapIcon, ViewColumnsIcon } from "@heroicons/react/20/solid";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
+
+import GlobalLoading from "./GlobalLoading";
+
+const ServerGlobal = dynamic(() => import("./Global"), {
+  loading: () => <GlobalLoading />,
+});
 
 export default function ServerListClient() {
   const { status } = useStatus();
@@ -19,9 +26,18 @@ export default function ServerListClient() {
   const t = useTranslations("ServerListClient");
   const containerRef = useRef<HTMLDivElement>(null);
   const defaultTag = "defaultTag";
-  const router = useRouter();
 
   const [tag, setTag] = useState<string>(defaultTag);
+  const [showMap, setShowMap] = useState<boolean>(false);
+  const [inline, setInline] = useState<string>("0");
+
+  useEffect(() => {
+    const inlineState = localStorage.getItem("inline");
+    if (inlineState !== null) {
+      console.log("inlineState", inlineState);
+      setInline(inlineState);
+    }
+  }, []);
 
   useEffect(() => {
     const savedTag = sessionStorage.getItem("selectedTag") || defaultTag;
@@ -97,12 +113,14 @@ export default function ServerListClient() {
       : filteredServersByStatus.filter((server) => server.tag === tag);
 
   if (filter) {
-    // 根据使用流量进行从高到低排序
     filteredServers.sort((a, b) => {
+      if (!a.online_status && b.online_status) return 1;
+      if (a.online_status && !b.online_status) return -1;
+      if (!a.online_status && !b.online_status) return 0;
       return (
-        b.status.NetInTransfer +
-        b.status.NetOutTransfer -
-        (a.status.NetInTransfer + b.status.NetOutTransfer)
+        b.status.NetInSpeed +
+        b.status.NetOutSpeed -
+        (a.status.NetInSpeed + a.status.NetOutSpeed)
       );
     });
   }
@@ -119,11 +137,31 @@ export default function ServerListClient() {
       <section className="flex items-center gap-2 w-full overflow-hidden">
         <button
           onClick={() => {
-            router.push(`/?global=true`);
+            setShowMap(!showMap);
           }}
-          className="rounded-[50px] text-white cursor-pointer [text-shadow:_0_1px_0_rgb(0_0_0_/_20%)] bg-blue-600 hover:bg-blue-500 p-[10px] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[inset_0_1px_0_rgba(0,0,0,0.2)] "
+          className={cn(
+            "rounded-[50px] text-white cursor-pointer [text-shadow:_0_1px_0_rgb(0_0_0_/_20%)] bg-blue-600 p-[10px] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]",
+            {
+              "shadow-[inset_0_1px_0_rgba(0,0,0,0.2)] bg-blue-500": showMap,
+            },
+          )}
         >
-          <GlobeAsiaAustraliaIcon className="size-[13px]" />
+          <MapIcon className="size-[13px]" />
+        </button>
+        <button
+          onClick={() => {
+            setInline(inline === "0" ? "1" : "0");
+            localStorage.setItem("inline", inline === "0" ? "1" : "0");
+          }}
+          className={cn(
+            "rounded-[50px] text-white cursor-pointer [text-shadow:_0_1px_0_rgb(0_0_0_/_20%)] bg-blue-600  p-[10px] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]  ",
+            {
+              "shadow-[inset_0_1px_0_rgba(0,0,0,0.2)] bg-blue-500":
+                inline === "1",
+            },
+          )}
+        >
+          <ViewColumnsIcon className="size-[13px]" />
         </button>
         {getEnv("NEXT_PUBLIC_ShowTag") === "true" && (
           <Switch
@@ -134,14 +172,28 @@ export default function ServerListClient() {
           />
         )}
       </section>
-      <section
-        ref={containerRef}
-        className="grid grid-cols-1 gap-2 md:grid-cols-2"
-      >
-        {filteredServers.map((serverInfo) => (
-          <ServerCard key={serverInfo.id} serverInfo={serverInfo} />
-        ))}
-      </section>
+      {showMap && <ServerGlobal />}
+      {inline === "1" && (
+        <section
+          ref={containerRef}
+          className="flex flex-col gap-2 overflow-x-scroll scrollbar-hidden"
+        >
+          {filteredServers.map((serverInfo) => (
+            <ServerCardInline key={serverInfo.id} serverInfo={serverInfo} />
+          ))}
+        </section>
+      )}
+
+      {inline === "0" && (
+        <section
+          ref={containerRef}
+          className="grid grid-cols-1 gap-2 md:grid-cols-2"
+        >
+          {filteredServers.map((serverInfo) => (
+            <ServerCard key={serverInfo.id} serverInfo={serverInfo} />
+          ))}
+        </section>
+      )}
     </>
   );
 }

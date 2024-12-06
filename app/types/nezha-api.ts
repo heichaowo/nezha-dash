@@ -3,6 +3,8 @@ export type ServerApi = {
   offline_servers: number;
   total_out_bandwidth: number;
   total_in_bandwidth: number;
+  total_out_speed: number;
+  total_in_speed: number;
   result: NezhaAPISafe[];
 };
 
@@ -35,7 +37,7 @@ export interface NezhaAPIHost {
   BootTime: number;
   CountryCode: string;
   Version: string;
-  GPU: null;
+  GPU: string[];
 }
 
 export interface NezhaAPIStatus {

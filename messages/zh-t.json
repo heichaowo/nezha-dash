@@ -4,6 +4,8 @@
     "p_1610-1676_Onlineservers": "在線伺服器",
     "p_2532-2599_Offlineservers": "離線伺服器",
     "p_3463-3530_Totalbandwidth": "總流量",
+    "speed": "速率",
+    "network": "網路",
     "error_message": "請檢查您的環境變數並檢查伺服器控制台",
     "no_data_message": "無資料"
   },
@@ -18,7 +20,11 @@
     "STG": "儲存",
     "Upload": "上傳",
     "Download": "下載",
-    "Offline": "離線"
+    "Offline": "離線",
+    "Uptime": "稼働時間",
+    "TotalUpload": "总上傳",
+    "TotalDownload": "总下載",
+    "Region": "地區"
   },
   "TabSwitch": {
     "Detail": "詳細",
@@ -39,7 +45,11 @@
     "Network": "網路",
     "Load": "負載",
     "Online": "在線時間",
-    "Offline": "離線"
+    "Offline": "離線",
+    "Uptime": "稼働時間",
+    "Upload": "上傳",
+    "Download": "下載",
+    "Region": "地域"
   },
   "NetworkChartClient": {
     "avg_delay": "延遲",
@@ -61,7 +71,10 @@
     "Disk": "磁碟",
     "Region": "地區",
     "System": "系統",
-    "CPU": "CPU"
+    "CPU": "CPU",
+    "Upload": "上傳",
+    "Download": "下載",
+    "Load": "負載"
   },
   "ServerDetailChartClient": {
     "chart_fetch_error_message": "獲取伺服器詳情失敗,請檢查您的環境變數並檢查伺服器控制台",

@@ -1,4 +1,5 @@
 // @auto-i18n-check. Please do not delete the line.
+import { ThemeColorManager } from "@/components/ThemeColorManager";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import getEnv from "@/lib/env-entry";
 import { FilterProvider } from "@/lib/network-filter-context";
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: customTitle || "NezhaDash",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
   },
   robots: {
     index: disableIndex ? false : true,
@@ -81,7 +82,10 @@ export default async function LocaleLayout({
           >
             <NextIntlClientProvider messages={messages}>
               <FilterProvider>
-                <StatusProvider>{children}</StatusProvider>
+                <StatusProvider>
+                  <ThemeColorManager />
+                  {children}
+                </StatusProvider>
               </FilterProvider>
             </NextIntlClientProvider>
           </ThemeProvider>
