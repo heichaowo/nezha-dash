@@ -17,6 +17,7 @@ import useSWR from "swr";
 import GlobalLoading from "./GlobalLoading";
 
 const ServerGlobal = dynamic(() => import("./Global"), {
+  ssr: false,
   loading: () => <GlobalLoading />,
 });
 
@@ -34,7 +35,6 @@ export default function ServerListClient() {
   useEffect(() => {
     const inlineState = localStorage.getItem("inline");
     if (inlineState !== null) {
-      console.log("inlineState", inlineState);
       setInline(inlineState);
     }
   }, []);
@@ -75,6 +75,7 @@ export default function ServerListClient() {
 
   const { data, error } = useSWR<ServerApi>("/api/server", nezhaFetcher, {
     refreshInterval: Number(getEnv("NEXT_PUBLIC_NezhaFetchInterval")) || 2000,
+    dedupingInterval: 1000,
   });
 
   if (error)
