@@ -10,7 +10,7 @@ export default function ServerFlag({
   country_code: string
   className?: string
 }) {
-  const [supportsEmojiFlags, setSupportsEmojiFlags] = useState(false)
+  const [supportsEmojiFlags, setSupportsEmojiFlags] = useState(true)
 
   const useSvgFlag = getEnv("NEXT_PUBLIC_ForceUseSvgFlag") === "true"
 
@@ -39,10 +39,6 @@ export default function ServerFlag({
   }, [useSvgFlag]) // 将 `useSvgFlag` 作为依赖，当其变化时重新触发
 
   if (!country_code) return null
-
-  if (supportsEmojiFlags && country_code.toLowerCase() === "tw") {
-    country_code = "cn"
-  }
 
   return (
     <span className={cn("text-[12px] text-muted-foreground", className)}>
