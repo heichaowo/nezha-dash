@@ -1,31 +1,30 @@
 "use client"
 
-import { ServerApi } from "@/app/types/nezha-api"
+import { useServerData } from "@/app/lib/server-data-context"
 import { Loader } from "@/components/loading/Loader"
 import { Card, CardContent } from "@/components/ui/card"
 import getEnv from "@/lib/env-entry"
 import { useFilter } from "@/lib/network-filter-context"
 import { useStatus } from "@/lib/status-context"
-import { cn, formatBytes, nezhaFetcher } from "@/lib/utils"
+import { cn, formatBytes } from "@/lib/utils"
 import blogMan from "@/public/blog-man.webp"
 import { ArrowDownCircleIcon, ArrowUpCircleIcon } from "@heroicons/react/20/solid"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
-import useSWRImmutable from "swr/immutable"
 
 export default function ServerOverviewClient() {
+  const { data, error, isLoading } = useServerData()
   const { status, setStatus } = useStatus()
   const { filter, setFilter } = useFilter()
   const t = useTranslations("ServerOverviewClient")
-
-  const { data, error, isLoading } = useSWRImmutable<ServerApi>("/api/server", nezhaFetcher)
   const disableCartoon = getEnv("NEXT_PUBLIC_DisableCartoon") === "true"
 
   if (error) {
+    const errorInfo = error as any
     return (
       <div className="flex flex-col items-center justify-center">
         <p className="text-sm font-medium opacity-40">
-          Error status:{error.status} {error.info?.cause ?? error.message}
+          Error status:{errorInfo?.status} {errorInfo.info?.cause ?? errorInfo?.message}
         </p>
         <p className="text-sm font-medium opacity-40">{t("error_message")}</p>
       </div>
@@ -141,7 +140,7 @@ export default function ServerOverviewClient() {
               </div>
               {data?.result ? (
                 <>
-                  <section className="flex flex-col sm:flex-row items-start pr-0 gap-1">
+                  <section className="flex flex-row flex-wrap items-start pr-0 gap-1">
                     <p className="text-[12px] text-blue-800 dark:text-blue-400   text-nowrap font-medium">
                       ↑{formatBytes(data?.total_out_bandwidth)}
                     </p>
@@ -149,7 +148,7 @@ export default function ServerOverviewClient() {
                       ↓{formatBytes(data?.total_in_bandwidth)}
                     </p>
                   </section>
-                  <section className="flex flex-col sm:flex-row -mr-1 sm:items-center items-start gap-1">
+                  <section className="flex flex-row flex-wrap -mr-1 sm:items-center items-start gap-1">
                     <p className="text-[11px] flex items-center text-nowrap font-semibold">
                       <ArrowUpCircleIcon className="size-3 mr-0.5 sm:mb-[1px]" />
                       {formatBytes(data?.total_out_speed)}/s
