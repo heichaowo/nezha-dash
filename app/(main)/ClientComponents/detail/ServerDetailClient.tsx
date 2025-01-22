@@ -1,6 +1,6 @@
 "use client"
 
-import { useServerData } from "@/app/lib/server-data-context"
+import { useServerData } from "@/app/context/server-data-context"
 import { BackIcon } from "@/components/Icon"
 import ServerFlag from "@/components/ServerFlag"
 import { ServerDetailLoading } from "@/components/loading/ServerDetailLoading"
@@ -40,7 +40,7 @@ export default function ServerDetailClient({
     if (hasHistory) {
       router.back()
     } else {
-      router.push(`/`)
+      router.push("/")
     }
   }
 
@@ -120,8 +120,8 @@ export default function ServerDetailClient({
               <div className="text-xs">
                 {" "}
                 {uptime / 86400 >= 1
-                  ? (uptime / 86400).toFixed(0) + " " + t("Days")
-                  : (uptime / 3600).toFixed(0) + " " + t("Hours")}{" "}
+                  ? `${(uptime / 86400).toFixed(0)} ${t("Days")}`
+                  : `${(uptime / 3600).toFixed(0)} ${t("Hours")}`}
               </div>
             </section>
           </CardContent>

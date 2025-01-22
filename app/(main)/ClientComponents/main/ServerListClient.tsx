@@ -1,14 +1,14 @@
 "use client"
 
-import { useServerData } from "@/app/lib/server-data-context"
+import { useFilter } from "@/app/context/network-filter-context"
+import { useServerData } from "@/app/context/server-data-context"
+import { useStatus } from "@/app/context/status-context"
 import ServerCard from "@/components/ServerCard"
 import ServerCardInline from "@/components/ServerCardInline"
 import Switch from "@/components/Switch"
 import GlobalLoading from "@/components/loading/GlobalLoading"
 import { Loader } from "@/components/loading/Loader"
 import getEnv from "@/lib/env-entry"
-import { useFilter } from "@/lib/network-filter-context"
-import { useStatus } from "@/lib/status-context"
 import { cn } from "@/lib/utils"
 import { MapIcon, ViewColumnsIcon } from "@heroicons/react/20/solid"
 import { useTranslations } from "next-intl"
@@ -124,16 +124,17 @@ export default function ServerListClient() {
   }
 
   const tagCountMap: Record<string, number> = {}
-  filteredServersByStatus.forEach((server) => {
+  for (const server of filteredServersByStatus) {
     if (server.tag) {
       tagCountMap[server.tag] = (tagCountMap[server.tag] || 0) + 1
     }
-  })
+  }
 
   return (
     <>
       <section className="flex items-center gap-2 w-full overflow-hidden">
         <button
+          type="button"
           onClick={() => {
             setShowMap(!showMap)
           }}
@@ -147,6 +148,7 @@ export default function ServerListClient() {
           <MapIcon className="size-[13px]" />
         </button>
         <button
+          type="button"
           onClick={() => {
             setInline(inline === "0" ? "1" : "0")
             localStorage.setItem("inline", inline === "0" ? "1" : "0")

@@ -1,18 +1,18 @@
+import { FilterProvider } from "@/app/context/network-filter-context"
+import { StatusProvider } from "@/app/context/status-context"
 // @auto-i18n-check. Please do not delete the line.
 import { ThemeColorManager } from "@/components/ThemeColorManager"
 import getEnv from "@/lib/env-entry"
-import { FilterProvider } from "@/lib/network-filter-context"
-import { StatusProvider } from "@/lib/status-context"
 import { cn } from "@/lib/utils"
 import "@/styles/globals.css"
 import type { Metadata } from "next"
-import { Viewport } from "next"
+import type { Viewport } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getMessages } from "next-intl/server"
 import { PublicEnvScript } from "next-runtime-env"
 import { ThemeProvider } from "next-themes"
 import { Inter as FontSans } from "next/font/google"
-import React from "react"
+import type React from "react"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
   },
   robots: {
-    index: disableIndex ? false : true,
-    follow: disableIndex ? false : true,
+    index: !disableIndex,
+    follow: !disableIndex,
   },
 }
 

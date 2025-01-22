@@ -1,11 +1,11 @@
 "use client"
 
-import { TooltipProvider } from "@/app/(main)/ClientComponents/detail/TooltipContext"
 import GlobalInfo from "@/app/(main)/ClientComponents/main/GlobalInfo"
 import { InteractiveMap } from "@/app/(main)/ClientComponents/main/InteractiveMap"
-import { useServerData } from "@/app/lib/server-data-context"
+import { useServerData } from "@/app/context/server-data-context"
+import { TooltipProvider } from "@/app/context/tooltip-context"
 import GlobalLoading from "@/components/loading/GlobalLoading"
-import { geoJsonString } from "@/lib/geo-json-string"
+import { geoJsonString } from "@/lib/geo/geo-json-string"
 
 export default function ServerGlobal() {
   const { data: nezhaServerList, error } = useServerData()
@@ -24,7 +24,7 @@ export default function ServerGlobal() {
   const countryList: string[] = []
   const serverCounts: { [key: string]: number } = {}
 
-  nezhaServerList.result.forEach((server) => {
+  for (const server of nezhaServerList.result) {
     if (server.host.CountryCode) {
       const countryCode = server.host.CountryCode.toUpperCase()
       if (!countryList.includes(countryCode)) {
@@ -32,7 +32,7 @@ export default function ServerGlobal() {
       }
       serverCounts[countryCode] = (serverCounts[countryCode] || 0) + 1
     }
-  })
+  }
 
   const width = 900
   const height = 500

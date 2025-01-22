@@ -2,7 +2,7 @@ import { auth } from "@/auth"
 import getEnv from "@/lib/env-entry"
 import { GetServerMonitor } from "@/lib/serverFetch"
 import { redirect } from "next/navigation"
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 
 export const dynamic = "force-dynamic"
 
@@ -27,8 +27,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const serverIdNum = parseInt(server_id, 10)
-    if (isNaN(serverIdNum)) {
+    const serverIdNum = Number.parseInt(server_id, 10)
+    if (Number.isNaN(serverIdNum)) {
       return NextResponse.json({ error: "server_id must be a number" }, { status: 400 })
     }
 

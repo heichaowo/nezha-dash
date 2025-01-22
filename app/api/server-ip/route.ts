@@ -1,11 +1,11 @@
-import fs from "fs"
-import path from "path"
+import fs from "node:fs"
+import path from "node:path"
 import { auth } from "@/auth"
 import getEnv from "@/lib/env-entry"
 import { GetServerIP } from "@/lib/serverFetch"
-import { AsnResponse, CityResponse, Reader } from "maxmind"
+import { type AsnResponse, type CityResponse, Reader } from "maxmind"
 import { redirect } from "next/navigation"
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 
 export const dynamic = "force-dynamic"
 
@@ -41,9 +41,9 @@ export async function GET(req: NextRequest) {
   try {
     const ip = await GetServerIP({ server_id: Number(server_id) })
 
-    const cityDbPath = path.join(process.cwd(), "lib", "GeoLite2-City.mmdb")
+    const cityDbPath = path.join(process.cwd(), "lib", "maxmind-db", "GeoLite2-City.mmdb")
 
-    const asnDbPath = path.join(process.cwd(), "lib", "GeoLite2-ASN.mmdb")
+    const asnDbPath = path.join(process.cwd(), "lib", "maxmind-db", "GeoLite2-ASN.mmdb")
 
     const cityDbBuffer = fs.readFileSync(cityDbPath)
     const asnDbBuffer = fs.readFileSync(asnDbPath)

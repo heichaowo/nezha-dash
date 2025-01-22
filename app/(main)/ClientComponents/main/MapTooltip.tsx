@@ -1,6 +1,6 @@
 "use client"
 
-import { useTooltip } from "@/app/(main)/ClientComponents/detail/TooltipContext"
+import { useTooltip } from "@/app/context/tooltip-context"
 import { useTranslations } from "next-intl"
 import { memo } from "react"
 
@@ -42,13 +42,13 @@ const MapTooltip = memo(function MapTooltip() {
           overflowY: "auto",
         }}
       >
-        {sortedServers.map((server, index) => (
-          <div key={index} className="flex items-center gap-1.5 py-0.5">
+        {sortedServers.map((server) => (
+          <div key={server.name} className="flex items-center gap-1.5 py-0.5">
             <span
               className={`w-1.5 h-1.5 shrink-0 rounded-full ${
                 server.status ? "bg-green-500" : "bg-red-500"
               }`}
-            ></span>
+            />
             <span className="text-xs">{server.name}</span>
           </div>
         ))}
