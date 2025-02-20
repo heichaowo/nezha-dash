@@ -30,7 +30,7 @@ const useCurrentTime = () => {
   })
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const intervalId = setInterval(() => {
       const now = DateTime.now().setLocale("en-US")
       setTime({
         hh: now.hour,
@@ -39,7 +39,7 @@ const useCurrentTime = () => {
       })
     }, 1000)
 
-    return () => clearInterval(timer)
+    return () => clearInterval(intervalId)
   }, [])
 
   return time
