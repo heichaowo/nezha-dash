@@ -1,7 +1,10 @@
 name: Auto Fix Lint and Format
+permissions:
+  contents: write
+  pull-requests: write
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize]
 
 jobs:
