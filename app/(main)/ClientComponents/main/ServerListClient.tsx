@@ -1,19 +1,19 @@
 "use client"
 
+import { MapIcon, ViewColumnsIcon } from "@heroicons/react/20/solid"
+import dynamic from "next/dynamic"
+import { useTranslations } from "next-intl"
+import { useEffect, useRef, useState } from "react"
 import { useFilter } from "@/app/context/network-filter-context"
 import { useServerData } from "@/app/context/server-data-context"
 import { useStatus } from "@/app/context/status-context"
+import GlobalLoading from "@/components/loading/GlobalLoading"
+import { Loader } from "@/components/loading/Loader"
 import ServerCard from "@/components/ServerCard"
 import ServerCardInline from "@/components/ServerCardInline"
 import Switch from "@/components/Switch"
-import GlobalLoading from "@/components/loading/GlobalLoading"
-import { Loader } from "@/components/loading/Loader"
 import getEnv from "@/lib/env-entry"
 import { cn } from "@/lib/utils"
-import { MapIcon, ViewColumnsIcon } from "@heroicons/react/20/solid"
-import { useTranslations } from "next-intl"
-import dynamic from "next/dynamic"
-import { useEffect, useRef, useState } from "react"
 
 const ServerGlobal = dynamic(() => import("./Global"), {
   ssr: false,
@@ -56,7 +56,7 @@ const getTagCounts = (servers: any[]) => {
 }
 
 const LoadingState = ({ t }: { t: any }) => (
-  <div className="flex min-h-96 flex-col items-center justify-center ">
+  <div className="flex min-h-96 flex-col items-center justify-center">
     <div className="flex items-center gap-2 font-semibold text-sm">
       <Loader visible={true} />
       {t("connecting")}...
@@ -75,7 +75,11 @@ const ServerList = ({
   servers,
   inline,
   containerRef,
-}: { servers: any[]; inline: string; containerRef: any }) => {
+}: {
+  servers: any[]
+  inline: string
+  containerRef: any
+}) => {
   if (inline === "1") {
     return (
       <section
@@ -180,7 +184,7 @@ export default function ServerListClient() {
             localStorage.setItem("showMap", String(newShowMap))
           }}
           className={cn(
-            "inset-shadow-2xs inset-shadow-white/20 flex cursor-pointer flex-col items-center gap-0 rounded-[50px] bg-blue-100 p-[10px] text-blue-600 transition-all dark:bg-blue-900 dark:text-blue-100 ",
+            "inset-shadow-2xs inset-shadow-white/20 flex cursor-pointer flex-col items-center gap-0 rounded-[50px] bg-blue-100 p-[10px] text-blue-600 transition-all dark:bg-blue-900 dark:text-blue-100",
             {
               "inset-shadow-black/20 bg-blue-600 text-white dark:bg-blue-100 dark:text-blue-600":
                 showMap,
@@ -197,7 +201,7 @@ export default function ServerListClient() {
             localStorage.setItem("inline", newInline)
           }}
           className={cn(
-            "inset-shadow-2xs inset-shadow-white/20 flex cursor-pointer flex-col items-center gap-0 rounded-[50px] bg-blue-100 p-[10px] text-blue-600 transition-all dark:bg-blue-900 dark:text-blue-100 ",
+            "inset-shadow-2xs inset-shadow-white/20 flex cursor-pointer flex-col items-center gap-0 rounded-[50px] bg-blue-100 p-[10px] text-blue-600 transition-all dark:bg-blue-900 dark:text-blue-100",
             {
               "inset-shadow-black/20 bg-blue-600 text-white dark:bg-blue-100 dark:text-blue-600":
                 inline === "1",

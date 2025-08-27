@@ -1,8 +1,8 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { getCsrfToken, signIn } from "next-auth/react"
 import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import { Loader } from "./loading/Loader"
@@ -49,12 +49,12 @@ export function SignIn() {
   }
   return (
     <form
-      className="flex flex-1 flex-col items-center justify-center gap-4 p-4 "
+      className="flex flex-1 flex-col items-center justify-center gap-4 p-4"
       onSubmit={handleSubmit}
     >
       <input type="hidden" name="csrfToken" value={csrfToken} />
       <section className="flex flex-col items-start gap-2">
-        <label className="flex flex-col items-start gap-1 ">
+        <label className="flex flex-col items-start gap-1">
           {errorState && <p className="font-semibold text-red-500 text-sm">{t("ErrorMessage")}</p>}
           {successState && (
             <p className="font-semibold text-green-500 text-sm">{t("SuccessMessage")}</p>

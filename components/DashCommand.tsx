@@ -1,7 +1,11 @@
 "use client"
 
-import { Home, Languages, Moon, Sun, SunMoon } from "lucide-react"
-
+import { Activity, Home, Languages, Moon, Sun, SunMoon } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
+import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
+import { useCommand } from "@/app/context/command-context"
 import { useServerData } from "@/app/context/server-data-context"
 import {
   CommandDialog,
@@ -12,17 +16,13 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command"
-import { localeItems } from "@/i18n-metadata"
 import { setUserLocale } from "@/i18n/locale"
-import { useTranslations } from "next-intl"
-import { useTheme } from "next-themes"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { localeItems } from "@/i18n-metadata"
 
 export function DashCommand() {
-  const [open, setOpen] = useState(false)
   const [search, setSearch] = useState("")
   const { data } = useServerData()
+  const { isOpen, closeCommand, toggleCommand } = useCommand()
   const router = useRouter()
   const { setTheme } = useTheme()
   const t = useTranslations("DashCommand")
@@ -31,13 +31,13 @@ export function DashCommand() {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        setOpen((open) => !open)
+        toggleCommand()
       }
     }
 
     document.addEventListener("keydown", down)
     return () => document.removeEventListener("keydown", down)
-  }, [])
+  }, [toggleCommand])
 
   if (!data?.result) return null
 
@@ -61,6 +61,12 @@ export function DashCommand() {
       icon: <Home />,
       label: t("Home"),
       action: () => router.push("/"),
+    },
+    {
+      keywords: ["network", "latency", "charts", "monitoring"],
+      icon: <Activity />,
+      label: t("NetworkCharts"),
+      action: () => router.push("/network"),
     },
     {
       keywords: ["light", "theme", "lightmode"],
@@ -87,49 +93,47 @@ export function DashCommand() {
   }))
 
   return (
-    <>
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder={t("TypeCommand")} value={search} onValueChange={setSearch} />
-        <CommandList className="border-t">
-          <CommandEmpty>{t("NoResults")}</CommandEmpty>
-          <CommandGroup heading={t("Servers")}>
-            {sortedServers.map((server) => (
-              <CommandItem
-                key={server.id}
-                value={server.name}
-                onSelect={() => {
-                  router.push(`/server/${server.id}`)
-                  setOpen(false)
-                }}
-              >
-                {server.online_status ? (
-                  <span className="h-2 w-2 shrink-0 self-center rounded-full bg-green-500" />
-                ) : (
-                  <span className="h-2 w-2 shrink-0 self-center rounded-full bg-red-500" />
-                )}
-                <span>{server.name}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-          <CommandSeparator />
+    <CommandDialog open={isOpen} onOpenChange={closeCommand}>
+      <CommandInput placeholder={t("TypeCommand")} value={search} onValueChange={setSearch} />
+      <CommandList className="border-t">
+        <CommandEmpty>{t("NoResults")}</CommandEmpty>
+        <CommandGroup heading={t("Servers")}>
+          {sortedServers.map((server) => (
+            <CommandItem
+              key={server.id}
+              value={server.name}
+              onSelect={() => {
+                router.push(`/server/${server.id}`)
+                closeCommand()
+              }}
+            >
+              {server.online_status ? (
+                <span className="h-2 w-2 shrink-0 self-center rounded-full bg-green-500" />
+              ) : (
+                <span className="h-2 w-2 shrink-0 self-center rounded-full bg-red-500" />
+              )}
+              <span>{server.name}</span>
+            </CommandItem>
+          ))}
+        </CommandGroup>
+        <CommandSeparator />
 
-          <CommandGroup heading={t("Shortcuts")}>
-            {shortcuts.map((item) => (
-              <CommandItem
-                key={item.label}
-                value={item.value}
-                onSelect={() => {
-                  item.action()
-                  setOpen(false)
-                }}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
-    </>
+        <CommandGroup heading={t("Shortcuts")}>
+          {shortcuts.map((item) => (
+            <CommandItem
+              key={item.label}
+              value={item.value}
+              onSelect={() => {
+                item.action()
+                closeCommand()
+              }}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </CommandDialog>
   )
 }

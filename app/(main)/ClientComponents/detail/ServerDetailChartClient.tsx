@@ -1,5 +1,8 @@
 "use client"
 
+import { useTranslations } from "next-intl"
+import { useEffect, useRef, useState } from "react"
+import { Area, AreaChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 import {
   MAX_HISTORY_LENGTH,
   type ServerDataWithTimestamp,
@@ -11,9 +14,6 @@ import AnimatedCircularProgressBar from "@/components/ui/animated-circular-progr
 import { Card, CardContent } from "@/components/ui/card"
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { formatBytes, formatNezhaInfo, formatRelativeTime } from "@/lib/utils"
-import { useTranslations } from "next-intl"
-import { useEffect, useRef, useState } from "react"
-import { Area, AreaChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 
 type gpuChartData = {
   timeStamp: string
@@ -67,12 +67,10 @@ export default function ServerDetailChartClient({
 
   if (error) {
     return (
-      <>
-        <div className="flex flex-col items-center justify-center">
-          <p className="font-medium text-sm opacity-40">{error.message}</p>
-          <p className="font-medium text-sm opacity-40">{t("chart_fetch_error_message")}</p>
-        </div>
-      </>
+      <div className="flex flex-col items-center justify-center">
+        <p className="font-medium text-sm opacity-40">{error.message}</p>
+        <p className="font-medium text-sm opacity-40">{t("chart_fetch_error_message")}</p>
+      </div>
     )
   }
   if (!data) return <ServerDetailChartLoading />
@@ -83,22 +81,16 @@ export default function ServerDetailChartClient({
       {data.host.GPU && data.host.GPU.length > 0 ? (
         <GpuChart data={data} history={history} />
       ) : null}
-      <ProcessChart data={data} history={history} />
-      <DiskChart data={data} history={history} />
       <MemChart data={data} history={history} />
+      <DiskChart data={data} history={history} />
       <NetworkChart data={data} history={history} />
       <ConnectChart data={data} history={history} />
+      <ProcessChart data={data} history={history} />
     </section>
   )
 }
 
-function CpuChart({
-  history,
-  data,
-}: {
-  history: ServerDataWithTimestamp[]
-  data: NezhaAPISafe
-}) {
+function CpuChart({ history, data }: { history: ServerDataWithTimestamp[]; data: NezhaAPISafe }) {
   const [cpuChartData, setCpuChartData] = useState([] as cpuChartData[])
   const hasInitialized = useRef(false)
   const [historyLoaded, setHistoryLoaded] = useState(false)
@@ -214,13 +206,7 @@ function CpuChart({
   )
 }
 
-function GpuChart({
-  history,
-  data,
-}: {
-  history: ServerDataWithTimestamp[]
-  data: NezhaAPISafe
-}) {
+function GpuChart({ history, data }: { history: ServerDataWithTimestamp[]; data: NezhaAPISafe }) {
   const [gpuChartData, setGpuChartData] = useState([] as gpuChartData[])
   const hasInitialized = useRef(false)
   const [historyLoaded, setHistoryLoaded] = useState(false)
@@ -445,13 +431,7 @@ function ProcessChart({
   )
 }
 
-function MemChart({
-  data,
-  history,
-}: {
-  data: NezhaAPISafe
-  history: ServerDataWithTimestamp[]
-}) {
+function MemChart({ data, history }: { data: NezhaAPISafe; history: ServerDataWithTimestamp[] }) {
   const t = useTranslations("ServerDetailChartClient")
   const [memChartData, setMemChartData] = useState([] as memChartData[])
   const hasInitialized = useRef(false)
@@ -518,7 +498,7 @@ function MemChart({
           <div className="flex items-center justify-between">
             <section className="flex items-center gap-4">
               <div className="flex flex-col">
-                <p className=" text-muted-foreground text-xs">{t("Mem")}</p>
+                <p className="text-muted-foreground text-xs">{t("Mem")}</p>
                 <div className="flex items-center gap-2">
                   <AnimatedCircularProgressBar
                     className="size-3 text-[0px]"
@@ -531,7 +511,7 @@ function MemChart({
                 </div>
               </div>
               <div className="flex flex-col">
-                <p className=" text-muted-foreground text-xs">{t("Swap")}</p>
+                <p className="text-muted-foreground text-xs">{t("Swap")}</p>
                 <div className="flex items-center gap-2">
                   <AnimatedCircularProgressBar
                     className="size-3 text-[0px]"
@@ -605,13 +585,7 @@ function MemChart({
   )
 }
 
-function DiskChart({
-  data,
-  history,
-}: {
-  data: NezhaAPISafe
-  history: ServerDataWithTimestamp[]
-}) {
+function DiskChart({ data, history }: { data: NezhaAPISafe; history: ServerDataWithTimestamp[] }) {
   const t = useTranslations("ServerDetailChartClient")
   const [diskChartData, setDiskChartData] = useState([] as diskChartData[])
   const hasInitialized = useRef(false)
@@ -819,7 +793,7 @@ function NetworkChart({
                 </div>
               </div>
               <div className="flex w-20 flex-col">
-                <p className=" text-muted-foreground text-xs">{t("Download")}</p>
+                <p className="text-muted-foreground text-xs">{t("Download")}</p>
                 <div className="flex items-center gap-1">
                   <span className="relative inline-flex size-1.5 rounded-full bg-[hsl(var(--chart-4))]" />
                   <p className="font-medium text-xs">{down.toFixed(2)} M/s</p>
@@ -961,7 +935,7 @@ function ConnectChart({
                 </div>
               </div>
               <div className="flex w-12 flex-col">
-                <p className=" text-muted-foreground text-xs">UDP</p>
+                <p className="text-muted-foreground text-xs">UDP</p>
                 <div className="flex items-center gap-1">
                   <span className="relative inline-flex size-1.5 rounded-full bg-[hsl(var(--chart-4))]" />
                   <p className="font-medium text-xs">{udp}</p>

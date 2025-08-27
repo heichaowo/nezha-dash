@@ -1,8 +1,8 @@
 "use client"
 
-import { cn } from "@/lib/utils"
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
+import { cn } from "@/lib/utils"
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
@@ -240,7 +240,6 @@ const ChartTooltipContent = React.forwardRef<
                           {typeof item.value === "number"
                             ? item.value.toFixed(2).toLocaleString()
                             : item.value}{" "}
-                          ms
                         </span>
                       )}
                     </div>
