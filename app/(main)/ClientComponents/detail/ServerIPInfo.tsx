@@ -5,7 +5,8 @@ import useSWRImmutable from "swr/immutable"
 import type { IPInfo } from "@/app/api/server-ip/route"
 import { Loader } from "@/components/loading/Loader"
 import { Card, CardContent } from "@/components/ui/card"
-import { nezhaFetcher } from "@/lib/utils"
+import ShinyText from "@/components/ui/shiny-text"
+import { cn, nezhaFetcher } from "@/lib/utils"
 
 export default function ServerIPInfo({ server_id }: { server_id: number }) {
   const t = useTranslations("IPInfo")
@@ -14,8 +15,14 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
 
   if (!data) {
     return (
-      <div className="mb-11">
-        <Loader visible />
+      <div className="mb-4 flex min-h-[42px] flex-col items-start justify-center">
+        <ShinyText
+          icon={<Loader visible={true} />}
+          text={t("analysing")}
+          speed={3}
+          delay={0}
+          className={cn("font-medium text-xs")}
+        />
       </div>
     )
   }
@@ -23,7 +30,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
   return (
     <section className="mb-4 flex flex-wrap gap-2">
       {data.asn?.autonomous_system_organization && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{"ASN"}</p>
@@ -33,7 +40,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
         </Card>
       )}
       {data.asn?.autonomous_system_number && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{t("asn_number")}</p>
@@ -43,7 +50,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
         </Card>
       )}
       {data.city?.registered_country?.names.en && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{t("registered_country")}</p>
@@ -53,7 +60,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
         </Card>
       )}
       {data.city?.country?.iso_code && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{"ISO"}</p>
@@ -63,7 +70,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
         </Card>
       )}
       {data.city?.city?.names.en && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{t("city")}</p>
@@ -73,7 +80,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
         </Card>
       )}
       {data.city?.location?.longitude && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{t("longitude")}</p>
@@ -83,7 +90,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
         </Card>
       )}
       {data.city?.location?.latitude && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{t("latitude")}</p>
@@ -93,7 +100,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
         </Card>
       )}
       {data.city?.location?.time_zone && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{t("time_zone")}</p>
@@ -103,7 +110,7 @@ export default function ServerIPInfo({ server_id }: { server_id: number }) {
         </Card>
       )}
       {data.city?.postal && (
-        <Card className="rounded-[10px] border-none bg-transparent shadow-none">
+        <Card className="rounded-[10px] border-none bg-transparent shadow-none ring-0">
           <CardContent className="px-1.5 py-1">
             <section className="flex flex-col items-start gap-0.5">
               <p className="text-muted-foreground text-xs">{t("postal_code")}</p>

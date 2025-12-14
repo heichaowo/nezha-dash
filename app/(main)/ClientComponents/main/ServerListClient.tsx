@@ -12,6 +12,7 @@ import { Loader } from "@/components/loading/Loader"
 import ServerCard from "@/components/ServerCard"
 import ServerCardInline from "@/components/ServerCardInline"
 import Switch from "@/components/Switch"
+import ShinyText from "@/components/ui/shiny-text"
 import getEnv from "@/lib/env-entry"
 import { cn } from "@/lib/utils"
 
@@ -58,8 +59,13 @@ const getTagCounts = (servers: any[]) => {
 const LoadingState = ({ t }: { t: any }) => (
   <div className="flex min-h-96 flex-col items-center justify-center">
     <div className="flex items-center gap-2 font-semibold text-sm">
-      <Loader visible={true} />
-      {t("connecting")}...
+      <ShinyText
+        icon={<Loader visible={true} />}
+        text={`${t("connecting")}...`}
+        speed={3}
+        delay={0}
+        className={cn("font-medium text-[14px]")}
+      />
     </div>
   </div>
 )
@@ -84,7 +90,7 @@ const ServerList = ({
     return (
       <section
         ref={containerRef}
-        className="scrollbar-hidden flex flex-col gap-2 overflow-x-scroll"
+        className="scrollbar-hidden flex flex-col gap-2 overflow-x-scroll p-px"
       >
         {servers.map((serverInfo) => (
           <ServerCardInline key={serverInfo.id} serverInfo={serverInfo} />
@@ -184,7 +190,7 @@ export default function ServerListClient() {
             localStorage.setItem("showMap", String(newShowMap))
           }}
           className={cn(
-            "inset-shadow-2xs inset-shadow-white/20 flex cursor-pointer flex-col items-center gap-0 rounded-[50px] bg-blue-100 p-[10px] text-blue-600 transition-all dark:bg-blue-900 dark:text-blue-100",
+            "inset-shadow-2xs inset-shadow-white/20 flex cursor-pointer flex-col items-center gap-0 rounded-[50px] bg-blue-100 p-2.5 text-blue-600 transition-all dark:bg-blue-900 dark:text-blue-100",
             {
               "inset-shadow-black/20 bg-blue-600 text-white dark:bg-blue-100 dark:text-blue-600":
                 showMap,
@@ -201,7 +207,7 @@ export default function ServerListClient() {
             localStorage.setItem("inline", newInline)
           }}
           className={cn(
-            "inset-shadow-2xs inset-shadow-white/20 flex cursor-pointer flex-col items-center gap-0 rounded-[50px] bg-blue-100 p-[10px] text-blue-600 transition-all dark:bg-blue-900 dark:text-blue-100",
+            "inset-shadow-2xs inset-shadow-white/20 flex cursor-pointer flex-col items-center gap-0 rounded-[50px] bg-blue-100 p-2.5 text-blue-600 transition-all dark:bg-blue-900 dark:text-blue-100",
             {
               "inset-shadow-black/20 bg-blue-600 text-white dark:bg-blue-100 dark:text-blue-600":
                 inline === "1",
