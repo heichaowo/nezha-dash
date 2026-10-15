@@ -1,5 +1,5 @@
-FROM --platform=$BUILDPLATFORM node:25-alpine AS base
-RUN npm install -g pnpm@10.29.3
+FROM node:24-alpine AS base
+RUN npm install -g pnpm@11.28.4
 WORKDIR /app
 
 # Stage 1: Install dependencies
@@ -11,10 +11,13 @@ RUN pnpm install --frozen-lockfile
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ARG RELEASE_TAG
+ARG COMMIT_SHA
+ENV RELEASE_TAG=$RELEASE_TAG COMMIT_SHA=$COMMIT_SHA
 RUN pnpm run build
 
 # Stage 3: Production image
-FROM node:25-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/public ./public
